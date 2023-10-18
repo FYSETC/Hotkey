@@ -1,4 +1,6 @@
 # Hotkey
+
+## Introduction
 Elevate your 3D printing experience with our latest innovation, the HotKey Macro Buttons designed exclusively for the discerning 3D printing enthusiast.
 
 **Key Features:**
@@ -6,8 +8,6 @@ Elevate your 3D printing experience with our latest innovation, the HotKey Macro
 - 12 Linear Red Switched Macro Buttons: Customize your 3D printer like never before. With 12 programmable macro buttons, execute your frequently used commands with a single press. Whether you’re toggling between settings, setting up a new print, or any other task, speed and convenience are at your fingertips.
 - Designed with Voron in Mind: While our HotKey Macro Buttons can enhance any 3D printing setup, they were meticulously designed with the Voron Trident and Voron 2.4 models as the primary inspiration. This ensures an impeccable fit and intuitive usage for Voron users.
 - Seamless Integration: Add these buttons to your printer's skirt without any hassle. Our design philosophy prioritizes both aesthetics and functionality, ensuring your 3D printer not only gets a boost in efficiency but also looks sleeker.
-
-
 
 
 ## Firmware
@@ -129,7 +129,25 @@ make KCONFIG_CONFIG=config.hotkey flash FLASH_DEVICE=/dev/serial/by-id/usb-katap
 ```
 ![image](https://github.com/FYSETC/Hotkey/assets/5789676/5edbfa4f-8526-44f4-b4c7-69ed31639149)
 
- 4. Your Hotkey Pad should now have Klipper Firmware installed and be ready to use. You can check it's worked by running another `ls /dev/serial/by-id`
+ 4. Your Hotkey Pad should now have Klipper Firmware installed and be ready to use. You can check it's worked by running another
+```bash
+ls /dev/serial/by-id
+```
 
+## Configuration 
 
+### How to use all this stuff:
+1.  Copy this .cfg file into your Klipper config directory and then add `[include Hotkey.cfg]` to the top of your printer.cfg in order to register the MCU, LEDs and macros with Klipper.
+2.  If you installed the Stealthburner as well and want to get the "STATUS_ERROR" state transmitted to the hotkey button PCB, you have to replace the "STATUS_ERROR" Macro in your stealthburner_leds.cfg with this:
+```bash
+[gcode_macro status_error]
+gcode:
+    STATUS_ERROR_HOTKEY
+    _set_sb_leds_by_name leds="logo" color="error" transmit=0
+    _set_sb_leds_by_name leds="nozzle" color="error" transmit=1
+```
+3.  Connect the PCB via USB to your RaspberryPi and SSH to your Pi
+4.  Get the Serial ID of the PCB with "ls /dev/serial/by-id/*". Usualy it´s like usb-Klipper_rp2040_xxx
+5.  Replace the serial under the [mcu hotkey] section with your id
+6.  Save your config and restart Klipper.
 
